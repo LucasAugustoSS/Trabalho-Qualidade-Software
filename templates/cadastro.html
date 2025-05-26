@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital CESUPA</title>
+</head>
+<body>
+    <h1>Cadastro</h1>
+    <form action="{{url_for('cadastro')}}" method="POST">
+        <label for="nome">Nome:</label>
+        <br>
+        <input type="text" id="nome" name="nome" required>
+        <br><br>
+        
+        <label for="data_nascimento">Data de Nascimento:</label>
+        <br>
+        <input type="date" id="data_nascimento" name="data_nascimento" required>
+        <br><br>
+
+        <label for="cpf">CPF:</label>
+        <br>
+        <input type="number" id="cpf" name="cpf" maxlength="11" required>
+        <br><br>
+
+        <label for="sexo">Sexo:</label>
+        <br>
+        <input type="text" id="sexo" name="sexo" maxlength="1" required>
+        <br><br>
+
+        <label for="telefone">Telefone:</label>
+        <br>
+        <input type="tel" id="telefone" name="telefone" required>
+        <br><br>
+
+        <label for="endereco">Endereço:</label>
+        <br>
+        <input type="text" id="endereco" name="endereco" required>
+        <br><br>
+
+        <!-- Dados opcionais (perguntados mas não necessariamente precisam ser preenchidos): email, tipo sanguíneo, alergias conhecidas -->
+
+        <input type="submit" value="Cadastrar">
+    </form>
+    <br>
+    <a href="{{url_for('home')}}">Voltar para a Home</a>
+</body>
+</html>
