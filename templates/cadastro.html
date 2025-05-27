@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Cadastro</h1>
-    <form action="{{url_for('cadastro')}}" method="POST">
+    <form action="{{url_for('cadastrar')}}" method="POST">
         <label for="nome">Nome:</label>
         <br>
         <input type="text" id="nome" name="nome" required>
@@ -40,9 +40,17 @@
 
         <!-- Dados opcionais (perguntados mas não necessariamente precisam ser preenchidos): email, tipo sanguíneo, alergias conhecidas -->
 
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Confirmar">
     </form>
     <br>
-    <a href="{{url_for('home')}}">Voltar para a Home</a>
+    <div>
+        {% with mensagens = get_flashed_messages() %}
+            {% if mensagens %}
+            {{ mensagens[0] }}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <br>
+    <a href="{{url_for('inicio')}}">Voltar</a>
 </body>
 </html>
