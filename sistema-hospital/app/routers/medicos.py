@@ -7,7 +7,7 @@ router = APIRouter(prefix="/medicos", tags=["Medicos"])
 
 @router.post("/", response_model=schemas.MedicoResponse)
 def criar_medico(medico: schemas.MedicoCreate, db: Session = Depends(get_db)):
-    novo = models.Medico(**medico.dict())
+    novo = models.Medico(**medico.model_dump())
     db.add(novo)
     db.commit()
     db.refresh(novo)

@@ -18,7 +18,7 @@ def get_medico_by_id(db: Session, medico_id: int):
 def create_paciente(db: Session, paciente: schemas.PacienteCreate):
     if get_paciente_by_cpf(db, paciente.cpf):
         raise HTTPException(status_code=400, detail="Paciente já cadastrado")
-    novo = models.Paciente(**paciente.dict())
+    novo = models.Paciente(**paciente.model_dump())
     db.add(novo)
     db.commit()
     db.refresh(novo)
@@ -41,7 +41,7 @@ def atualizar_paciente(db: Session, paciente_id: int, dados: schemas.PacienteCre
     paciente = get_paciente_by_id(db, paciente_id)
     if not paciente:
         raise HTTPException(status_code=404, detail="Paciente não encontrado")
-    for campo, valor in dados.dict().items():
+    for campo, valor in dados.model_dump().items():
         setattr(paciente, campo, valor)
     db.commit()
     db.refresh(paciente)
@@ -77,7 +77,7 @@ def criar_medico(db: Session, medico: schemas.MedicoCreate):
     if not medico.nome.strip() or not medico.especialidade.strip():
         raise HTTPException(status_code=400, detail="Nome e especialidade são obrigatórios.")
 
-    novo = models.Medico(**medico.dict())
+    novo = models.Medico(**medico.model_dump())
     db.add(novo)
     db.commit()
     db.refresh(novo)
@@ -109,7 +109,7 @@ def agendar_consulta(db: Session, dados: schemas.ConsultaCreate):
     if conflito:
         raise HTTPException(status_code=400, detail="Horário indisponível")
 
-    nova = models.Consulta(**dados.dict())
+    nova = models.Consulta(**dados.model_dump())
     db.add(nova)
     db.commit()
     db.refresh(nova)

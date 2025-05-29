@@ -20,7 +20,7 @@ def agendar_consulta(consulta: schemas.ConsultaCreate, db: Session = Depends(get
     if conflito:
         raise HTTPException(status_code=400, detail="Horário já ocupado para esse médico")
 
-    nova = models.Consulta(**consulta.dict())
+    nova = models.Consulta(**consulta.model_dump())
     db.add(nova)
     db.commit()
     db.refresh(nova)
