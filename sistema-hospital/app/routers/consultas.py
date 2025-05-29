@@ -15,7 +15,7 @@ def agendar_consulta(consulta: schemas.ConsultaCreate, db: Session = Depends(get
         models.Consulta.medico_id == consulta.medico_id,
         models.Consulta.data == consulta.data,
         models.Consulta.horario == consulta.horario,
-        models.Consulta.status == "Agendada"  # só considera agendadas como conflito
+        models.Consulta.status == "Agendada"
     ).first()
     if conflito:
         raise HTTPException(status_code=400, detail="Horário já ocupado para esse médico")
