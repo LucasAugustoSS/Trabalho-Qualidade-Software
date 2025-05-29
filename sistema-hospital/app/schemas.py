@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator, constr
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, constr
 from datetime import date, time
 from typing import Optional,Annotated
 import re
@@ -15,25 +15,25 @@ class PacienteCreate(BaseModel):
     tipo_sanguineo: Optional[str] = None
     alergias: Optional[str] = None
 
-    @validator("cpf")
+    @field_validator("cpf")
     def validar_cpf(cls, v):
         if not re.fullmatch(r"\d{11}", v):
             raise ValueError("CPF deve conter 11 dígitos")
         return v
 
-    @validator("sexo")
+    @field_validator("sexo")
     def validar_sexo(cls, v):
         if v not in ["M", "F", "Outro"]:
             raise ValueError("Sexo deve ser 'M', 'F' ou 'Outro'")
         return v
 
-    @validator("tipo_sanguineo")
+    @field_validator("tipo_sanguineo")
     def validar_sangue(cls, v):
         if v and v not in ["A", "B", "AB", "O"]:
             raise ValueError("Tipo sanguíneo inválido")
         return v
 
-    @validator("email", "tipo_sanguineo", "alergias", pre=True)
+    @field_validator("email", "tipo_sanguineo", "alergias", mode="before")
     def empty_str_to_none(cls, v):
         return v or None
 
@@ -41,10 +41,10 @@ class PacienteResponse(BaseModel):
     id: int
     nome: str
     cpf: str
+    nascimento: date
     ativo: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PacienteUpdate(BaseModel):
     nome: Optional[str]
@@ -69,8 +69,7 @@ class MedicoResponse(BaseModel):
     nome: str
     especialidade: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 
@@ -88,5 +87,4 @@ class ConsultaResponse(BaseModel):
     horario: time
     status: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
