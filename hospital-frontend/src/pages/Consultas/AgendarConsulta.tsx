@@ -22,7 +22,6 @@ export default function AgendarConsulta() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // Validação local
     if (!form.paciente_id || !form.medico_id || !form.data || !form.horario) {
       setErro("Preencha todos os campos.");
       return;

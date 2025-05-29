@@ -9,7 +9,6 @@ export default function EditarPaciente() {
   const [form, setForm] = useState({
     nome: "",
     nascimento: "",
-    cpf: "",
     sexo: "",
     telefone: "",
     endereco: "",
@@ -25,25 +24,37 @@ export default function EditarPaciente() {
         setForm({
           nome: p.nome,
           nascimento: p.nascimento,
-          cpf: p.cpf,
           sexo: p.sexo,
           telefone: p.telefone,
           endereco: p.endereco,
-          email: p.email || "",
-          tipo_sanguineo: p.tipo_sanguineo || "",
-          alergias: p.alergias || ""
+          email: p.email ?? null,
+          tipo_sanguineo: p.tipo_sanguineo || null,
+          alergias: p.alergias || null
         });
       }
     });
   }, [id]);
+
+  function limpar(obj: Record<string, any>) {
+    const novo: Record<string, any> = {};
+    for (const chave in obj) {
+      const valor = obj[chave];
+      novo[chave] = valor === "" ? null : valor;
+    }
+    return novo;
+  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e: React.FormEvent) {
+    console.log("Dados enviados:", form);
     e.preventDefault();
-    await api.put(`/pacientes/${id}`, form);
+
+    const formLimpo = limpar(form);
+
+    await api.put(`/pacientes/${id}`, formLimpo);
     navigate("/");
   }
 

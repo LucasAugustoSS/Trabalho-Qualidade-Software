@@ -19,19 +19,36 @@ export default function CadastrarPaciente() {
 
   const [erro, setErro] = useState("");
 
+  function limpar(obj: Record<string, any>) {
+    const novo: Record<string, any> = {};
+    for (const chave in obj) {
+      const valor = obj[chave];
+      novo[chave] = valor === "" ? null : valor;
+    }
+    return novo;
+  }
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     try {
-      setErro(""); // limpa erro anterior
-      await api.post("/pacientes", form);
+      setErro("");
+      const formLimpo = limpar(form);
+      await api.post("/pacientes", formLimpo);
       navigate("/");
     } catch (err: any) {
-      const msg = err.response?.data?.detail || "Erro ao cadastrar paciente.";
-      setErro(msg);
+      if (err.response?.status === 422 && Array.isArray(err.response.data?.detail)) {
+        const mensagens = err.response.data.detail.map(
+          (e: any) => `${e.loc[1]}: ${e.msg}`
+        );
+        setErro(mensagens.join(" | "));
+      } else {
+        setErro("Erro ao cadastrar paciente.");
+      }
     }
   }
 
@@ -45,13 +62,12 @@ export default function CadastrarPaciente() {
             <div key={key}>
               <label htmlFor={key}>{key}</label>
 
-              {/* Campo "sexo" como select */}
               {key === "sexo" ? (
                 <select name={key} id={key} value={value} onChange={handleChange}>
                   <option value="">Selecione</option>
                   <option value="M">Masculino</option>
                   <option value="F">Feminino</option>
-                  <option value="Outro">Outro</option>
+                  <option value="O">Outro</option>
                 </select>
               ) : (
                 <input
