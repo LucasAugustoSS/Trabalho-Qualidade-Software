@@ -178,7 +178,7 @@ export default function ListaPacientes() {
           <Link to="/pacientes/cadastrar">
             <button>Cadastrar Novo Paciente</button>
           </Link>
-          <Link to="/">
+          <Link to="/home">
             <button style={{ marginLeft: "10px" }}>Voltar para Página Inicial</button>
           </Link>
         </div>

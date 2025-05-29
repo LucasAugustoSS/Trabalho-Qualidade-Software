@@ -55,7 +55,6 @@ export default function EditarPaciente() {
     const formLimpo = limpar(form);
 
     await api.put(`/pacientes/${id}`, formLimpo);
-    navigate("/");
   }
 
   return (

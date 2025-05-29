@@ -2,6 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import schemas, crud, models
 from app.database import get_db
+from fastapi.security import OAuth2PasswordBearer
+from app.auth import verificar_token, get_current_user
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
 
 router = APIRouter(prefix="/pacientes", tags=["Pacientes"])
 
@@ -37,7 +42,9 @@ def atualizar(paciente_id: int, dados: schemas.PacienteUpdate, db: Session = Dep
     return crud.atualizar_paciente(db, paciente_id, dados)
 
 @router.patch("/{paciente_id}/inativar")
-def inativar(paciente_id: int, motivo: dict, db: Session = Depends(get_db)):
+def inativar(paciente_id: int, motivo: dict, db: Session = Depends(get_db), usuario=Depends(get_current_user)):
+    if usuario["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Apenas administradores podem inativar pacientes")
     if "motivo" not in motivo or not motivo["motivo"]:
         raise HTTPException(status_code=400, detail="Motivo da inativação é obrigatório")
     return crud.inativar_paciente(db, paciente_id, motivo["motivo"])
@@ -49,3 +56,10 @@ def listar_todos(db: Session = Depends(get_db)):
 @router.get("/inativos", response_model=list[schemas.PacienteResponse])
 def listar_inativos(db: Session = Depends(get_db)):
     return db.query(models.Paciente).filter(models.Paciente.ativo == False).all()
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    dados = verificar_token(token)
+    if not dados:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    return dados

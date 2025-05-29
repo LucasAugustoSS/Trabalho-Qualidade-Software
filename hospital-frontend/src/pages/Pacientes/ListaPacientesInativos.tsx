@@ -33,7 +33,7 @@ export default function ListaPacientesInativos() {
             </li>
           ))}
         </ul>
-        <Link to="/">
+        <Link to="/home">
           <button>Voltar</button>
         </Link>
       </div>

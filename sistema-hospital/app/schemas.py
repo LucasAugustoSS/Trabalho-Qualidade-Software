@@ -1,7 +1,29 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, constr
 from datetime import date, time
-from typing import Optional,Annotated
+from typing import Optional,Annotated,Literal
 import re
+
+
+class UsuarioCreate(BaseModel):
+    nome: str
+    email: EmailStr
+    senha: str
+    role: str  # prfil de adm ou recepcionista
+
+class UsuarioLogin(BaseModel):
+    email: EmailStr
+    senha: str
+
+
+
+class UsuarioResponse(BaseModel):
+    id: int
+    nome: str
+    email: EmailStr
+    role: Literal["admin", "recepcionista"]
+
+    class Config:
+        orm_mode = True
 
 
 class PacienteCreate(BaseModel):

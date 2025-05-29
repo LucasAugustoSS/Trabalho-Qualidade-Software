@@ -1,7 +1,14 @@
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../index.css";
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // remove o token
+    navigate("/login"); // redireciona para o login
+  };
+
   return (
     <div className="container">
       <div className="card">
@@ -20,6 +27,9 @@ export default function Home() {
           <Link to="/consultas"><button>Visualizar Consultas</button></Link>
           <Link to="/consultas/agendar"><button>Agendar Consulta</button></Link>
           <Link to="/consultas/canceladas"><button>Consultas Canceladas</button></Link>
+
+          {/* Botão para logout e ir ao login */}
+          <button onClick={handleLogout}>Voltar ao Login</button>
         </div>
       </div>
     </div>

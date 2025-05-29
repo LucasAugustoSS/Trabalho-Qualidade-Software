@@ -1,6 +1,15 @@
 from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, Time
 from .database import Base
 
+class Usuario(Base):
+    __tablename__ = "usuarios"
+    id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    senha = Column(String, nullable=False)
+    role = Column(String, nullable=False) # aqui é o perfil
+
+
 class Paciente(Base):
     __tablename__ = "pacientes"
     id = Column(Integer, primary_key=True, index=True)
