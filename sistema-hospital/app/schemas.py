@@ -23,8 +23,8 @@ class PacienteCreate(BaseModel):
 
     @field_validator("sexo")
     def validar_sexo(cls, v):
-        if v not in ["M", "F", "Outro"]:
-            raise ValueError("Sexo deve ser 'M', 'F' ou 'Outro'")
+        if v not in ["M", "F", "O"]:
+            raise ValueError("Sexo deve ser 'M', 'F' ou 'O'")
         return v
 
     @field_validator("tipo_sanguineo")
@@ -40,8 +40,14 @@ class PacienteCreate(BaseModel):
 class PacienteResponse(BaseModel):
     id: int
     nome: str
-    cpf: str
     nascimento: date
+    cpf: str
+    sexo: str
+    telefone: str
+    endereco: str
+    email: Optional[EmailStr] = None
+    tipo_sanguineo: Optional[str] = None
+    alergias: Optional[str] = None
     ativo: bool
 
     model_config = ConfigDict(from_attributes=True)

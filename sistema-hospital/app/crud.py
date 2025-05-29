@@ -37,7 +37,7 @@ def buscar_pacientes(db: Session, termo: str):
     ).all()
 
 
-def atualizar_paciente(db: Session, paciente_id: int, dados: schemas.PacienteCreate):
+def atualizar_paciente(db: Session, paciente_id: int, dados: schemas.PacienteUpdate):
     paciente = get_paciente_by_id(db, paciente_id)
     if not paciente:
         raise HTTPException(status_code=404, detail="Paciente não encontrado")

@@ -20,8 +20,20 @@ def buscar(termo: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Paciente não encontrado")
     return resultados
 
-@router.put("/{paciente_id}", response_model=schemas.PacienteResponse)
-def atualizar(paciente_id: int, dados: schemas.PacienteCreate, db: Session = Depends(get_db)):
+@router.get("/buscar_id/", response_model=list[schemas.PacienteResponse])
+def buscar_id(id: str, db: Session = Depends(get_db)):
+    return db.query(models.Paciente).filter(models.Paciente.id == id).all()
+
+@router.get("/buscar_cpf/", response_model=list[schemas.PacienteResponse])
+def buscar_cpf(cpf: str, db: Session = Depends(get_db)):
+    return db.query(models.Paciente).filter(models.Paciente.cpf == cpf).all()
+
+@router.get("/buscar_nome/", response_model=list[schemas.PacienteResponse])
+def buscar_nome(nome: str, db: Session = Depends(get_db)):
+    return db.query(models.Paciente).filter(models.Paciente.nome == nome).all()
+
+@router.put("/{paciente_id}", response_model=schemas.PacienteUpdate)
+def atualizar(paciente_id: int, dados: schemas.PacienteUpdate, db: Session = Depends(get_db)):
     return crud.atualizar_paciente(db, paciente_id, dados)
 
 @router.patch("/{paciente_id}/inativar")

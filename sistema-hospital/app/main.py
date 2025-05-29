@@ -8,7 +8,7 @@ app = FastAPI(title="Hospital CESUPA API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Coloque seu domínio ex: "http://localhost:3000" para mais segurança
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
