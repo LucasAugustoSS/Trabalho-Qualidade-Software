@@ -14,8 +14,20 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", { email, senha });
       const { access_token } = res.data;
+
       localStorage.setItem("token", access_token);
-      navigate("/home"); // redireciona para a home
+
+      // Decodificar token (assumindo JWT)
+      const payload = JSON.parse(atob(access_token.split('.')[1]));
+      const role = payload.role?.toLowerCase();
+      localStorage.setItem("role", role); // salva a role para uso futuro
+
+      if (role === "medico") {
+        navigate("/consultas");
+      } else {
+        navigate("/home");
+      }
+
     } catch (err: any) {
       setErro(err.response?.data?.detail || "Falha no login.");
     }
@@ -27,22 +39,21 @@ export default function Login() {
         <h1 className="page-title">Login</h1>
         {erro && <p style={{ color: "red" }}>{erro}</p>}
         <form onSubmit={handleLogin}>
-  <div>
-    <label>Email:</label>
-    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-  </div>
-  <div>
-    <label>Senha:</label>
-    <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
-  </div>
-  <button type="submit">Entrar</button>
-</form>
-
+          <div>
+            <label>Email:</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+          <div>
+            <label>Senha:</label>
+            <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
+          </div>
+          <button type="submit">Entrar</button>
+        </form>
       </div>
-      <p style={{ marginTop: "20px" }}>
-  Ainda não tem conta? <Link to="/cadastro">Cadastre-se</Link>
-</p>
 
+      <p style={{ marginTop: "20px" }}>
+        Ainda não tem conta? <Link to="/cadastro">Cadastre-se</Link>
+      </p>
     </div>
   );
 }

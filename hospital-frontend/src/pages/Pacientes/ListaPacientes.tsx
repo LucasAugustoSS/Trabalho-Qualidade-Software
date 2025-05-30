@@ -3,6 +3,13 @@ import { api } from "../../api/axios";
 import { Link } from "react-router-dom";
 import "../../index.css";
 
+interface Usuario {
+  id: number;
+  nome: string;
+  email: string;
+  role: string;
+}
+
 interface Paciente {
   id: number;
   nome: string;
@@ -21,11 +28,34 @@ export default function ListaPacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [form, setForm] = useState({ id: "", nome: "", nascimento: "", cpf: "", ativo: "" });
   const [erro, setErro] = useState("");
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
 
   useEffect(() => {
     listarPacientes();
     api.get("/pacientes").then(res => setPacientes(res.data));
   }, []);
+
+  useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+  
+      fetch("http://localhost:8000/auth/me", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Falha ao buscar usuário");
+          return res.json();
+        })
+        .then((data) => {
+          setUsuario(data);
+        })
+        .catch((err) => {
+          console.error(err);
+          setUsuario(null);
+        });
+    }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -117,34 +147,38 @@ export default function ListaPacientes() {
       <div className="card">
         <h1 className="page-title">Lista de Pacientes</h1>
 
-        <input
-          type="number"
-          name="cpf"
-          placeholder="Digite o CPF"
-          value={form.cpf}
-          onChange={handleChange}
-        />
-        <button onClick={buscarPorCPF}>Buscar</button>
+        {(usuario?.role === "recepcionista" || usuario?.role === "medico") && (
+          <>
+            <input
+              type="number"
+              name="cpf"
+              placeholder="Digite o CPF"
+              value={form.cpf}
+              onChange={handleChange}
+            />
+            <button onClick={buscarPorCPF}>Buscar</button>
 
-        <input
-          type="text"
-          name="nome"
-          placeholder="Digite o nome"
-          value={form.nome}
-          onChange={handleChange}
-        />
-        <button onClick={buscarPorNome}>Buscar</button>
+            <input
+              type="text"
+              name="nome"
+              placeholder="Digite o nome"
+              value={form.nome}
+              onChange={handleChange}
+            />
+            <button onClick={buscarPorNome}>Buscar</button>
 
-        <input
-          type="text"
-          name="id"
-          placeholder="Digite o ID"
-          value={form.id}
-          onChange={handleChange}
-        />
-        <button onClick={buscarPorID}>Buscar</button>
+            <input
+              type="text"
+              name="id"
+              placeholder="Digite o ID"
+              value={form.id}
+              onChange={handleChange}
+            />
+            <button onClick={buscarPorID}>Buscar</button>
 
-        {erro && <p style={{ color: "red" }}>{erro}</p>}
+            {erro && <p style={{ color: "red" }}>{erro}</p>}
+          </>
+        )}
 
         <ul>
           {pacientes.map((p) => (
@@ -164,7 +198,7 @@ export default function ListaPacientes() {
                 <Link to={`/pacientes/editar/${p.id}`}>
                   <button>Editar</button>
                 </Link>
-                {p.ativo && (
+                {(p.ativo && (usuario?.role === "recepcionista" || usuario?.role === "admin")) && (
                   <button onClick={() => inativarPaciente(p.id)} style={{ backgroundColor: "#e74c3c", color: "#fff" }}>
                     Inativar
                   </button>

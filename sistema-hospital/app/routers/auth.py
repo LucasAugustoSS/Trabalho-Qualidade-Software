@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app import schemas, models, auth
 from app.database import get_db
 
 router = APIRouter(prefix="/auth", tags=["Autenticação"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 @router.post("/register", response_model=schemas.UsuarioResponse)
 def registrar(usuario: schemas.UsuarioCreate, db: Session = Depends(get_db)):
@@ -57,3 +59,13 @@ def login(dados: schemas.UsuarioLogin, db: Session = Depends(get_db)):
 def listar(db: Session = Depends(get_db)):
     return db.query(models.Usuario).all()
 
+@router.get("/me", response_model=schemas.UsuarioResponse)
+def ler_usuario_atual(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = auth.verificar_token(token)
+    email = payload.get("sub")
+    if email is None:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    user = db.query(models.Usuario).filter_by(email=email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return user

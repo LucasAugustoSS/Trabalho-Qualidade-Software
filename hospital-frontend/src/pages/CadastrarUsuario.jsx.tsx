@@ -29,6 +29,13 @@ export default function CadastrarUsuario() {
     // ✅ Salva a role no localStorage
     localStorage.setItem("role", form.role.toLowerCase());
 
+    const res = await api.post("/auth/login", {
+      email: form.email,
+      senha: form.senha,
+    });
+    const { access_token } = res.data;
+    localStorage.setItem("token", access_token);
+
     // ✅ Redireciona com base na role
     if (form.role.toLowerCase() === "medico") {
       navigate("/medicos/consultas");
@@ -65,11 +72,11 @@ export default function CadastrarUsuario() {
             <select name="role" value={form.role} onChange={handleChange}>
               <option value="recepcionista">Recepcionista</option>
               <option value="admin">Administrador</option>
-              <option value="medico">Médico</option> {/* ✅ value correto */}
+              <option value="medico">Médico</option>
             </select>
           </div>
 
-          {/* ✅ Mostrar campo de especialidade se for médico */}
+          
           {form.role === "medico" && (
             <div>
               <label>Especialidade</label>

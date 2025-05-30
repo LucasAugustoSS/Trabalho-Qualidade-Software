@@ -8,7 +8,7 @@ class UsuarioCreate(BaseModel):
     email: EmailStr
     senha: str
     role: str  
-    especialidade: Optional[str] = None  # ✅ Adicionado
+    especialidade: Optional[str] = None
 class UsuarioLogin(BaseModel):
     email: EmailStr
     senha: str
@@ -18,9 +18,9 @@ class UsuarioResponse(BaseModel):
     nome: str
     email: EmailStr
     role: Literal["admin", "recepcionista", "medico"]
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+
 
 
 class PacienteCreate(BaseModel):
@@ -120,7 +120,6 @@ class ConsultaMedicoResponse(BaseModel):
     horario: time
     status: str
     paciente_nome: str
-
     @classmethod
     def from_model(cls, consulta, paciente_nome: str):
         return cls(

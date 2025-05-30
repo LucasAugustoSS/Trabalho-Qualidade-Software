@@ -12,6 +12,7 @@ export default function App() {
         <Link to="/consultas/canceladas" className="bg-red-600 text-white px-4 py-2 rounded">Canceladas</Link>
         <Link to="/consultas/agendar" className="bg-accent text-white px-4 py-2 rounded">Agendar Consulta</Link>
         <Link to="/medicos/cadastrar" className="bg-secondary border px-4 py-2 rounded">Cadastrar Médico</Link>
+        <Link to="/consultas/pacientes" className="bg-secondary border px-4 py-2 rounded">Consultas Médico</Link>
       </div>
     </div>
   );
