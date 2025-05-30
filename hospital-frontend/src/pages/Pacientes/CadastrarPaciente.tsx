@@ -83,7 +83,7 @@ export default function CadastrarPaciente() {
           <button type="submit">Cadastrar</button>
         </form>
         <div style={{ marginTop: "20px" }}>
-          <Link to="/">
+          <Link to="/home">
             <button>Voltar para Página Inicial</button>
           </Link>
         </div>

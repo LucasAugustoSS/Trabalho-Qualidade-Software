@@ -31,7 +31,7 @@ export default function ListaMedicos() {
             ))}
         </ul>
         <div style={{ marginTop: "20px" }}>
-          <Link to="/">
+          <Link to="/home">
             <button>Voltar para Página Inicial</button>
           </Link>
         </div>

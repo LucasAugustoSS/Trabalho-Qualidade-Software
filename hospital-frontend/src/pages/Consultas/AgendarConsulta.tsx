@@ -87,7 +87,7 @@ export default function AgendarConsulta() {
         </form>
 
         <div style={{ marginTop: "20px" }}>
-          <Link to="/"><button>Voltar para Página Inicial</button></Link>
+          <Link to="/home"><button>Voltar para Página Inicial</button></Link>
         </div>
       </div>
     </div>

@@ -1,20 +1,17 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, constr
 from datetime import date, time
-from typing import Optional,Annotated,Literal
+from typing import Optional, Annotated, Literal
 import re
-
 
 class UsuarioCreate(BaseModel):
     nome: str
     email: EmailStr
     senha: str
-    role: str  # prfil de adm ou recepcionista
-
+    role: str  
+    especialidade: Optional[str] = None  # ✅ Adicionado
 class UsuarioLogin(BaseModel):
     email: EmailStr
     senha: str
-
-
 
 class UsuarioResponse(BaseModel):
     id: int
@@ -100,7 +97,6 @@ class MedicoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-
 class ConsultaCreate(BaseModel):
     paciente_id: int
     medico_id: int
@@ -116,3 +112,21 @@ class ConsultaResponse(BaseModel):
     status: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ConsultaMedicoResponse(BaseModel):
+    id: int
+    data: date
+    horario: time
+    status: str
+    paciente_nome: str
+
+    @classmethod
+    def from_model(cls, consulta, paciente_nome: str):
+        return cls(
+            id=consulta.id,
+            data=consulta.data,
+            horario=consulta.horario,
+            status=consulta.status,
+            paciente_nome=paciente_nome
+        )

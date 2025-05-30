@@ -37,7 +37,7 @@ export default function ListaConsultasCanceladas() {
             </li>
           ))}
         </ul>
-        <Link to="/">
+        <Link to="/home">
           <button>Voltar</button>
         </Link>
       </div>

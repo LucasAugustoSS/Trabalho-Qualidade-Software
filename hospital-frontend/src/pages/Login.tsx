@@ -15,7 +15,7 @@ export default function Login() {
       const res = await api.post("/auth/login", { email, senha });
       const { access_token } = res.data;
       localStorage.setItem("token", access_token);
-      navigate("/home");
+      navigate("/home"); // redireciona para a home
     } catch (err: any) {
       setErro(err.response?.data?.detail || "Falha no login.");
     }

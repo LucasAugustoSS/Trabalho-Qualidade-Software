@@ -8,8 +8,10 @@ export default function CadastrarUsuario() {
     nome: "",
     email: "",
     senha: "",
-    role: "recepcionista"
+    role: "recepcionista",
+    especialidade: ""
   });
+
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
 
@@ -17,23 +19,26 @@ export default function CadastrarUsuario() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      await api.post("/auth/register", form);
-      
-      const res = await api.post("/auth/login", {
-        email: form.email,
-        senha: form.senha,
-      });
-      const { access_token } = res.data;
-      localStorage.setItem("token", access_token);
+ async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  try {
+    console.log("Dados enviados:", form);
 
+    await api.post("/auth/register", form);
+
+    // ✅ Salva a role no localStorage
+    localStorage.setItem("role", form.role.toLowerCase());
+
+    // ✅ Redireciona com base na role
+    if (form.role.toLowerCase() === "medico") {
+      navigate("/medicos/consultas");
+    } else {
       navigate("/home");
-    } catch (err: any) {
-      setErro(err.response?.data?.detail || "Erro ao cadastrar usuário.");
     }
+  } catch (err: any) {
+    setErro(err.response?.data?.detail || "Erro ao cadastrar usuário.");
   }
+}
 
   return (
     <div className="container">
@@ -60,9 +65,24 @@ export default function CadastrarUsuario() {
             <select name="role" value={form.role} onChange={handleChange}>
               <option value="recepcionista">Recepcionista</option>
               <option value="admin">Administrador</option>
-              <option value="medico">Médico</option>
+              <option value="medico">Médico</option> {/* ✅ value correto */}
             </select>
           </div>
+
+          {/* ✅ Mostrar campo de especialidade se for médico */}
+          {form.role === "medico" && (
+            <div>
+              <label>Especialidade</label>
+              <input
+                type="text"
+                name="especialidade"
+                value={form.especialidade}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
           <button type="submit">Cadastrar</button>
         </form>
 

@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import RequireAuth from "./components/RequireAuth";
 import CadastrarUsuario from "./pages/CadastrarUsuario.jsx";
-
+import MedicoConsultas from "./pages/Medicos/MedicoConsultas";
 export default function Router() {
   return (
     <BrowserRouter>
@@ -21,6 +21,8 @@ export default function Router() {
         <Route path="/home" element={<Home />} />
         <Route path="/cadastro" element={<CadastrarUsuario />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/medicos/consultas" element={<RequireAuth><MedicoConsultas /></RequireAuth>} />
+
 
         {/* Rotas protegidas */}
         <Route path="/pacientes" element={<RequireAuth><ListaPacientes /></RequireAuth>} />
@@ -32,6 +34,7 @@ export default function Router() {
         <Route path="/consultas" element={<RequireAuth><ListaConsultas /></RequireAuth>} />
         <Route path="/consultas/canceladas" element={<RequireAuth><ListaConsultasCanceladas /></RequireAuth>} />
         <Route path="/consultas/agendar" element={<RequireAuth><AgendarConsulta /></RequireAuth>} />
+    { /*   <Route path="/medicos/consultas" element={<RequireAuth><MedicoConsultas /></RequireAuth>} />*/}
 
         {/* Página não encontrada */}
         <Route path="*" element={<div>Página não encontrada</div>} />

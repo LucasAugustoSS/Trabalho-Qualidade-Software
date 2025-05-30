@@ -17,57 +17,14 @@ interface Paciente {
   ativo: boolean;
 }
 
-interface Usuario {
-  id: number;
-  nome: string;
-  email: string;
-  role: string;
-}
-
 export default function ListaPacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [form, setForm] = useState({ id: "", nome: "", nascimento: "", cpf: "", ativo: "" });
   const [erro, setErro] = useState("");
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const permissoes = [
-    { to: "/pacientes", label: "Gerenciar Pacientes", roles: ["admin", "recepcionista", "medico"] },
-    { to: "/pacientes/cadastrar", label: "Cadastrar Paciente", roles: ["recepcionista"] },
-    { to: "/pacientes/inativos", label: "Pacientes Inativos", roles: ["admin", "recepcionista"] },
-
-    { to: "/medicos", label: "Gerenciar Médicos", roles: ["recepcionista"] },
-    { to: "/medicos/cadastrar", label: "Cadastrar Médico", roles: ["recepcionista"] },
-
-    { to: "/consultas", label: "Visualizar Consultas", roles: ["recepcionista"] },
-    { to: "/consultas/agendar", label: "Agendar Consulta", roles: ["recepcionista"] },
-    { to: "/consultas/canceladas", label: "Consultas Canceladas", roles: ["recepcionista"] },
-  ];
-
   useEffect(() => {
     listarPacientes();
     api.get("/pacientes").then(res => setPacientes(res.data));
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    fetch("http://localhost:8000/auth/me", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Falha ao buscar usuário");
-        return res.json();
-      })
-      .then(data => {
-        setUsuario(data)
-      })
-      .catch(err => {
-        console.error(err);
-        setUsuario(null);
-      });
   }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -160,38 +117,34 @@ export default function ListaPacientes() {
       <div className="card">
         <h1 className="page-title">Lista de Pacientes</h1>
 
-        {usuario?.role === "medico" && (
-          <>
-            <input
-              type="number"
-              name="cpf"
-              placeholder="Digite o CPF"
-              value={form.cpf}
-              onChange={handleChange}
-            />
-            <button onClick={buscarPorCPF}>Buscar</button>
+        <input
+          type="number"
+          name="cpf"
+          placeholder="Digite o CPF"
+          value={form.cpf}
+          onChange={handleChange}
+        />
+        <button onClick={buscarPorCPF}>Buscar</button>
 
-            <input
-              type="text"
-              name="nome"
-              placeholder="Digite o nome"
-              value={form.nome}
-              onChange={handleChange}
-            />
-            <button onClick={buscarPorNome}>Buscar</button>
+        <input
+          type="text"
+          name="nome"
+          placeholder="Digite o nome"
+          value={form.nome}
+          onChange={handleChange}
+        />
+        <button onClick={buscarPorNome}>Buscar</button>
 
-            <input
-              type="text"
-              name="id"
-              placeholder="Digite o ID"
-              value={form.id}
-              onChange={handleChange}
-            />
-            <button onClick={buscarPorID}>Buscar</button>
+        <input
+          type="text"
+          name="id"
+          placeholder="Digite o ID"
+          value={form.id}
+          onChange={handleChange}
+        />
+        <button onClick={buscarPorID}>Buscar</button>
 
-            {erro && <p style={{ color: "red" }}>{erro}</p>}
-          </>
-        )}
+        {erro && <p style={{ color: "red" }}>{erro}</p>}
 
         <ul>
           {pacientes.map((p) => (
