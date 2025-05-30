@@ -20,7 +20,7 @@ class UsuarioResponse(BaseModel):
     id: int
     nome: str
     email: EmailStr
-    role: Literal["admin", "recepcionista"]
+    role: Literal["admin", "recepcionista", "medico"]
 
     class Config:
         orm_mode = True

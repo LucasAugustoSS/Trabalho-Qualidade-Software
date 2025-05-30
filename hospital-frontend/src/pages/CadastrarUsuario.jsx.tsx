@@ -21,6 +21,14 @@ export default function CadastrarUsuario() {
     e.preventDefault();
     try {
       await api.post("/auth/register", form);
+      
+      const res = await api.post("/auth/login", {
+        email: form.email,
+        senha: form.senha,
+      });
+      const { access_token } = res.data;
+      localStorage.setItem("token", access_token);
+
       navigate("/home");
     } catch (err: any) {
       setErro(err.response?.data?.detail || "Erro ao cadastrar usuário.");
@@ -52,6 +60,7 @@ export default function CadastrarUsuario() {
             <select name="role" value={form.role} onChange={handleChange}>
               <option value="recepcionista">Recepcionista</option>
               <option value="admin">Administrador</option>
+              <option value="medico">Médico</option>
             </select>
           </div>
           <button type="submit">Cadastrar</button>

@@ -4,4 +4,5 @@ pydantic
 sqlalchemy
 httpx
 pydantic[email]
-python-jose[cryptography] passlib[bcrypt]
+python-jose[cryptography]
+passlib[bcrypt]
